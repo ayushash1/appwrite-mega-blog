@@ -1,7 +1,10 @@
+/* eslint-disable react/prop-types */
+import logo2 from '../assets/logo2.png'
 
-const Logo = () => {
+const Logo = ({width}) => {
   return (
-    <div>Logo</div>
+    // <h5>ThoughtCloud</h5>
+    <img  src={logo2} width={width}></img>
   )
 }
 
