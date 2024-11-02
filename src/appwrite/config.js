@@ -81,7 +81,7 @@ export class Service {
     }
   }
 
-  async getPsots(queries = [Query.equal("status", "active")]) {
+  async getPosts(queries = [Query.equal("status", "active")]) {
     // get all posts thats why no parameters needed
     try {
       return await this.databases.listDocuments(
