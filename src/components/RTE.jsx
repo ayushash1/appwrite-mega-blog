@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types */
 import { Editor } from "@tinymce/tinymce-react";
 import { Controller } from "react-hook-form";
-
+import conf from "../conf/conf.js";
 /**
  * A wrapper around the tinymce-react Editor component that uses the
  * Controller component from react-hook-form to integrate with the
@@ -30,6 +30,7 @@ export default function RTE({ name, control, label, defaultValue = "" }) {
         render={({ field: { onChange } }) => (
           <Editor
             initialValue={defaultValue}
+            apiKey= {conf.tinyMCEKey}
             init={{
               initialValue: defaultValue,
               height: 500,
