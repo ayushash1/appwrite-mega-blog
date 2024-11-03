@@ -1,56 +1,44 @@
 /* eslint-disable react/prop-types */
-import { useCallback, useEffect } from "react";
+import React, { useCallback } from "react";
 import { useForm } from "react-hook-form";
-import { Button, Input, Select, RTE } from "../Index";
+import { Button, Input, RTE, Select } from "..";
 import appwriteService from "../../appwrite/config";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 
-function PostForm({ post }) {
+export default function PostForm({ post }) {
   const { register, handleSubmit, watch, setValue, control, getValues } =
     useForm({
       defaultValues: {
         title: post?.title || "",
-        slug: post?.slug || "",
+        slug: post?.$id || "",
         content: post?.content || "",
-        status: post?.status || "draft",
+        status: post?.status || "active",
       },
     });
+
   const navigate = useNavigate();
   const userData = useSelector((state) => state.auth.userData);
 
-  /**
-   * Handles the form submission.
-   * If the post is being edited, it updates the post.
-   * If the post is being created, it creates a new post.
-   * @param {object} data - The form data.
-   * @returns {void}
-   */
   const submit = async (data) => {
-    // If the post is being edited, update the post
     if (post) {
-      // If an image is being uploaded, upload it and delete the old one
       const file = data.image[0]
         ? await appwriteService.uploadFile(data.image[0])
         : null;
 
       if (file) {
-        // Delete the old image
         appwriteService.deleteFile(post.featuredImage);
       }
 
-      // Update the post
       const dbPost = await appwriteService.updatePost(post.$id, {
         ...data,
         featuredImage: file ? file.$id : undefined,
       });
 
       if (dbPost) {
-        // Navigate to the post page
         navigate(`/post/${dbPost.$id}`);
       }
     } else {
-      // If the post is being created, create a new post
       const file = await appwriteService.uploadFile(data.image[0]);
 
       if (file) {
@@ -62,7 +50,6 @@ function PostForm({ post }) {
         });
 
         if (dbPost) {
-          // Navigate to the post page
           navigate(`/post/${dbPost.$id}`);
         }
       }
@@ -70,27 +57,24 @@ function PostForm({ post }) {
   };
 
   const slugTransform = useCallback((value) => {
-    if (value && typeof value === "string") {
+    if (value && typeof value === "string")
       return value
-        .toLowerCase()
         .trim()
-        .replace(/[a-zA-Z\d\s]+/g, "-")
+        .toLowerCase()
+        .replace(/[^a-zA-Z\d\s]+/g, "-")
         .replace(/\s/g, "-");
-    }
 
     return "";
   }, []);
 
-  useEffect(() => {
+  React.useEffect(() => {
     const subscription = watch((value, { name }) => {
       if (name === "title") {
-        setValue("slug", slugTransform(value.title, { shouldValidate: true }));
+        setValue("slug", slugTransform(value.title), { shouldValidate: true });
       }
     });
 
-    return () => {
-      subscription.unsubscribe();
-    };
+    return () => subscription.unsubscribe();
   }, [watch, slugTransform, setValue]);
 
   return (
@@ -154,5 +138,3 @@ function PostForm({ post }) {
     </form>
   );
 }
-
-export default PostForm;
