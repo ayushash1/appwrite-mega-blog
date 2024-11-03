@@ -2,20 +2,7 @@
 import { Editor } from "@tinymce/tinymce-react";
 import { Controller } from "react-hook-form";
 import conf from "../conf/conf.js";
-/**
- * A wrapper around the tinymce-react Editor component that uses the
- * Controller component from react-hook-form to integrate with the
- * form state.
- *
- * @param {string} name The name of the field to be used to store the
- *   content of the editor.
- * @param {object} control The control props provided by react-hook-form
- *   to be passed to the Controller component.
- * @param {string} [label] The label to be displayed above the editor.
- * @param {string} [defaultValue] The initial value of the editor. Defaults
- *   to an empty string.
- * @returns {JSX.Element} The rendered Editor component.
- */
+
 export default function RTE({ name, control, label, defaultValue = "" }) {
   return (
     <div className="w-full">
