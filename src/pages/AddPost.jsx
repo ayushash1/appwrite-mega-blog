@@ -1,4 +1,5 @@
-import { Container, PostForm } from "../components/Index";
+import { Container } from "../components/Container/Container";
+import { PostForm } from "../components/post-form/PostForm";
 const AddPost = () => {
   return (
     <div>
